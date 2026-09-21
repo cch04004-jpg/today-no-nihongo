@@ -147,15 +147,44 @@ if(!isConfigured(firebaseConfig)){
   loginBtn.addEventListener("click", async ()=>{
     try{
       setStatus("로그인 중", "syncing");
+      helpEl.textContent = "Google 로그인 창을 확인해줘.";
       await setPersistence(auth, browserLocalPersistence);
+
+      provider.setCustomParameters({
+        prompt: "select_account"
+      });
+
       await signInWithPopup(auth, provider);
     }catch(error){
-      console.error(error);
+      console.error("Firebase login error:", error);
+
+      const code = error?.code || "unknown-error";
       setStatus("로그인 실패", "error");
-      helpEl.textContent =
-        error.code === "auth/unauthorized-domain"
-          ? "Firebase Authentication의 Authorized domains에 현재 Vercel 주소를 추가해줘."
-          : "Google 로그인을 완료하지 못했어. 다시 시도해줘.";
+
+      const messages = {
+        "auth/unauthorized-domain":
+          "현재 사이트 주소가 Firebase 승인 도메인에 없어요.",
+        "auth/operation-not-allowed":
+          "Firebase Authentication에서 Google 로그인 제공업체가 아직 활성화되지 않았어요.",
+        "auth/popup-blocked":
+          "브라우저가 Google 로그인 팝업을 차단했어요. 주소창의 팝업 차단 아이콘에서 이 사이트의 팝업을 허용해줘.",
+        "auth/popup-closed-by-user":
+          "Google 로그인 창이 완료되기 전에 닫혔어요. 다시 로그인해줘.",
+        "auth/cancelled-popup-request":
+          "로그인 창 요청이 취소됐어요. 잠시 후 다시 시도해줘.",
+        "auth/network-request-failed":
+          "네트워크 또는 광고/추적 차단 기능 때문에 Firebase 로그인 요청이 막혔을 수 있어요.",
+        "auth/invalid-api-key":
+          "Firebase API 키 설정을 확인해야 해요.",
+        "auth/invalid-oauth-client-id":
+          "Google OAuth 클라이언트 설정에 문제가 있어요. Firebase에서 Google 로그인 제공업체를 껐다가 다시 켜야 할 수 있어요.",
+        "auth/web-storage-unsupported":
+          "현재 브라우저가 로그인에 필요한 웹 저장소 사용을 막고 있어요. 시크릿 모드나 쿠키 차단 설정을 확인해줘."
+      };
+
+      const friendly = messages[code] || "Google 로그인을 완료하지 못했어.";
+      helpEl.textContent = `${friendly}  [오류: ${code}]`;
+      statusEl.title = error?.message || code;
     }
   });
 
