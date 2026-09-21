@@ -1,0 +1,22 @@
+今日の日本語 — 최종 Firebase 동기화 버전
+
+Vercel에 아래 파일들이 모두 같은 최상위 폴더에 있도록 배포하세요.
+- index.html
+- sync.js
+- firebase-config.js
+
+같이 들어있는 firestore.rules는 Firebase 콘솔의 Firestore > 규칙에 이미 적용했다면
+배포용으로 꼭 필요하지는 않습니다.
+
+배포 후 확인:
+1. https://today-no-nihongo.vercel.app/ 접속
+2. Google 로그인
+3. 상단 상태가 "동기화됨"으로 바뀌는지 확인
+4. PC에서 단어 하나를 '외웠어요' 체크
+5. 모바일에서 같은 Google 계정으로 로그인
+6. 같은 학습 기록이 보이는지 확인
+
+문제가 생길 경우:
+- "unauthorized-domain": Firebase Authentication > 설정 > 승인된 도메인에
+  today-no-nihongo.vercel.app 이 있는지 확인
+- "permission-denied": Firestore 규칙이 게시되었는지 확인

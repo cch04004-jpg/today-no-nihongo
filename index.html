@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今日の日本語 | 일본어 공부</title>
+  <style>
+    :root{
+      --bg:#fffaf7;
+      --card:#ffffff;
+      --ink:#2f2a2a;
+      --muted:#7b7171;
+      --line:#eadfda;
+      --accent:#f4a6a6;
+      --accent2:#f7c9a9;
+      --accent3:#d8e8d3;
+      --good:#2f8f64;
+      --bad:#c95f5f;
+      --shadow:0 12px 30px rgba(91, 67, 57, .08);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, Pretendard, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(244,166,166,.22), transparent 32%),
+        radial-gradient(circle at top right, rgba(216,232,211,.35), transparent 30%),
+        var(--bg);
+      color:var(--ink);
+      min-height:100vh;
+    }
+    .wrap{max-width:1120px;margin:0 auto;padding:28px 18px 70px}
+    header{
+      display:flex;justify-content:space-between;gap:20px;align-items:center;
+      margin-bottom:26px;
+    }
+    .brand h1{margin:0;font-size:clamp(28px,5vw,48px);letter-spacing:-1px}
+    .brand p{margin:8px 0 0;color:var(--muted)}
+    .pill{
+      background:#fff;border:1px solid var(--line);padding:10px 14px;border-radius:999px;
+      box-shadow:var(--shadow);font-size:14px;white-space:nowrap;
+    }
+    nav{
+      display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 24px;
+    }
+    nav button,.btn{
+      border:1px solid var(--line);background:#fff;color:var(--ink);
+      border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer;
+      transition:.2s ease;box-shadow:0 4px 12px rgba(60,40,30,.04)
+    }
+    nav button:hover,.btn:hover{transform:translateY(-1px)}
+    nav button.active,.btn.primary{
+      background:var(--ink);color:#fff;border-color:var(--ink)
+    }
+    .btn.soft{background:#fff1ef;border-color:#f6d0ca}
+    .btn.green{background:#eff7ed;border-color:#d3e7ce}
+    .section{display:none}
+    .section.active{display:block}
+    .hero{
+      display:grid;grid-template-columns:1.3fr .7fr;gap:18px;margin-bottom:20px
+    }
+    .panel{
+      background:rgba(255,255,255,.9);border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;
+    }
+    .hero-copy{
+      min-height:210px;display:flex;flex-direction:column;justify-content:center;
+      background:linear-gradient(135deg,#fff 0%,#fff5f3 100%);
+    }
+    .kicker{font-weight:800;color:#b56c6c;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+    .hero-copy h2{font-size:32px;margin:10px 0 8px}
+    .hero-copy p{color:var(--muted);line-height:1.7;margin:0}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .stat{
+      border:1px solid var(--line);background:#fff;border-radius:18px;padding:18px
+    }
+    .stat strong{display:block;font-size:28px}
+    .stat span{font-size:13px;color:var(--muted)}
+    .section-title{
+      display:flex;align-items:end;justify-content:space-between;gap:14px;margin:18px 2px 14px
+    }
+    .section-title h2{margin:0;font-size:24px}
+    .section-title p{margin:0;color:var(--muted);font-size:14px}
+    .grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:14px
+    }
+    .word-card{
+      position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;
+      padding:18px;min-height:210px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    }
+    .tag{
+      width:max-content;font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px;
+      background:#fff4ef;border:1px solid #f4d7c8;color:#9e6a55
+    }
+    .jp{font-size:28px;font-weight:900;margin-top:18px}
+    .reading{color:#8d8080;margin-top:4px}
+    .meaning{font-size:18px;font-weight:800;margin-top:12px}
+    .example{
+      margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);
+      color:#544b4b;font-size:14px;line-height:1.65
+    }
+    .example small{display:block;color:var(--muted);margin-top:4px}
+    .card-actions{margin-top:auto;padding-top:14px;display:flex;gap:8px}
+    .mini{
+      flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 10px;
+      font-weight:700;cursor:pointer
+    }
+    .mini.learned{background:#ecf7ef;color:var(--good);border-color:#cce8d5}
+    .quiz-box{
+      max-width:760px;margin:0 auto;background:#fff;border:1px solid var(--line);
+      border-radius:28px;box-shadow:var(--shadow);padding:28px
+    }
+    .progress{
+      height:10px;background:#f1e7e3;border-radius:999px;overflow:hidden;margin:14px 0 26px
+    }
+    .progress > div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%}
+    .prompt{font-size:14px;color:var(--muted);font-weight:700}
+    .quiz-word{font-size:38px;font-weight:900;margin:12px 0 20px}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .option{
+      border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px;text-align:left;
+      cursor:pointer;font-size:16px;font-weight:700
+    }
+    .option.correct{background:#eef8f1;border-color:#bee0c9;color:var(--good)}
+    .option.wrong{background:#fff0f0;border-color:#f0c7c7;color:var(--bad)}
+    .feedback{
+      min-height:28px;margin-top:16px;font-weight:700;line-height:1.6
+    }
+    .compose{
+      display:grid;grid-template-columns:1fr .9fr;gap:18px
+    }
+    textarea,input[type="text"]{
+      width:100%;border:1px solid var(--line);border-radius:16px;padding:14px 15px;
+      font:inherit;background:#fff;outline:none;
+    }
+    textarea:focus,input[type="text"]:focus{border-color:#d9a8a8;box-shadow:0 0 0 4px rgba(244,166,166,.12)}
+    textarea{min-height:120px;resize:vertical}
+    .sentence-card{
+      background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:14px
+    }
+    .sentence-card h3{margin:0 0 8px}
+    .ko{font-weight:800;font-size:18px}
+    .hint{color:var(--muted);font-size:14px;margin-top:6px}
+    .result-box{
+      border-radius:18px;padding:16px;margin-top:14px;line-height:1.65
+    }
+    .result-box.good{background:#eef8f1;color:#256c4d;border:1px solid #c9e8d4}
+    .result-box.bad{background:#fff3f1;color:#914d4d;border:1px solid #f1d2cc}
+    .notebook{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:12px
+    }
+    .note-item{
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px
+    }
+    .note-item strong{font-size:20px}
+    .empty{color:var(--muted);text-align:center;padding:40px}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    footer{margin-top:36px;text-align:center;color:var(--muted);font-size:13px}
+
+    .kanji-tip{
+      position:relative;
+      display:inline-block;
+      border-bottom:1.5px dotted #c78383;
+      cursor:pointer;
+      font-weight:700;
+      padding:0 1px;
+    }
+    .tip-popover{
+      position:absolute;
+      left:50%;
+      bottom:calc(100% + 10px);
+      transform:translateX(-50%) translateY(4px);
+      min-width:178px;
+      background:#2f2a2a;
+      color:#fff;
+      border-radius:12px;
+      padding:10px;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:.16s ease;
+      z-index:80;
+      box-shadow:0 8px 22px rgba(47,42,42,.22);
+      text-align:left;
+      font-weight:500;
+    }
+    .tip-popover::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:100%;
+      transform:translateX(-50%);
+      border:7px solid transparent;
+      border-top-color:#2f2a2a;
+    }
+    .tip-reading{font-size:13px;font-weight:800}
+    .tip-meaning{font-size:12px;opacity:.86;margin-top:2px}
+    .tip-add{
+      width:100%;
+      border:0;
+      border-radius:9px;
+      margin-top:8px;
+      padding:7px 8px;
+      background:#fff;
+      color:#2f2a2a;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .tip-add.added{
+      background:#dcefdc;
+      color:#2f6f49;
+      cursor:default;
+    }
+    .kanji-tip:hover .tip-popover,
+    .kanji-tip:focus .tip-popover,
+    .kanji-tip.show-tip .tip-popover{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .header-tools{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .sync-pill{
+      display:flex;
+      align-items:center;
+      gap:7px;
+    }
+    .sync-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:#b9afa9;display:inline-block;
+    }
+    .sync-pill.online .sync-dot{background:#58a779}
+    .sync-pill.syncing .sync-dot{background:#d5a54b}
+    .sync-pill.error .sync-dot{background:#cc6767}
+    .user-chip{
+      display:flex;align-items:center;gap:8px;
+      max-width:190px;
+      background:#fff;border:1px solid var(--line);
+      padding:6px 10px 6px 6px;border-radius:999px;
+      box-shadow:var(--shadow);font-size:13px;font-weight:700;
+    }
+    .user-chip img{
+      width:28px;height:28px;border-radius:50%;object-fit:cover;background:#f0e9e5;
+    }
+    .user-chip span{
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .sync-login{
+      padding:10px 14px;
+    }
+    .sync-login:disabled{
+      opacity:.55;cursor:not-allowed;transform:none;
+    }
+    .sync-help{
+      font-size:12px;color:var(--muted);
+      flex-basis:100%;text-align:right;
+    }
+
+    .extra-section{margin-top:26px}
+    .extra-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+    }
+    .extra-empty{
+      color:var(--muted);
+      border:1px dashed var(--line);
+      border-radius:18px;
+      padding:20px;
+      text-align:center;
+      background:rgba(255,255,255,.55);
+    }
+
+    @media (max-width:900px){
+      .grid,.extra-grid{grid-template-columns:repeat(2,1fr)}
+      .hero,.compose{grid-template-columns:1fr}
+    }
+    @media (max-width:560px){
+      header{align-items:flex-start;flex-direction:column}
+      .header-tools{justify-content:flex-start}
+      .sync-help{text-align:left}
+      .grid,.extra-grid,.options,.notebook{grid-template-columns:1fr}
+      .word-card{min-height:auto}
+      .quiz-box{padding:20px}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="kicker">Japanese Study</div>
+      <h1>今日の日本語 🌸</h1>
+      <p>하루 8단어, 예문, 테스트, 문장 연습까지 한 번에.</p>
+    </div>
+    <div class="header-tools">
+      <div class="pill" id="todayLabel"></div>
+      <div class="pill sync-pill" id="syncStatus" title="현재는 이 기기에만 저장됩니다.">
+        <span class="sync-dot"></span>
+        <span id="syncStatusText">기기 저장</span>
+      </div>
+      <div class="user-chip" id="userChip" hidden>
+        <img id="userPhoto" alt="" />
+        <span id="userName"></span>
+      </div>
+      <button class="btn sync-login" id="googleLogin" type="button">Google 로그인</button>
+      <button class="btn sync-login" id="googleLogout" type="button" hidden>로그아웃</button>
+      <div class="sync-help" id="syncHelp">로그인하면 PC와 모바일의 학습기록이 자동으로 동기화돼.</div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="active" data-tab="today">오늘의 학습</button>
+    <button data-tab="quiz">단어 시험</button>
+    <button data-tab="write">문장 시험</button>
+    <button data-tab="notebook">오답노트</button>
+  </nav>
+
+  <section id="today" class="section active">
+    <div class="hero">
+      <div class="panel hero-copy">
+        <div class="kicker">Today’s mission</div>
+        <h2>8개만 제대로 외우자.</h2>
+        <p>너무 쉬운 단어는 빼고, 초급 후반~N4 초입에서 자주 쓰는 단어를 골랐어.<br>아는 단어는 교체하고, 외운 단어는 체크해두면 학습 기록에 남아.</p>
+        <div class="controls">
+          <button class="btn primary" id="refreshWords">오늘 단어 새로 뽑기</button>
+          <button class="btn soft" id="resetToday">오늘 체크 초기화</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><strong id="learnedCount">0</strong><span>외운 단어</span></div>
+          <div class="stat"><strong id="wrongCount">0</strong><span>오답노트</span></div>
+          <div class="stat"><strong id="quizScore">-</strong><span>최근 시험</span></div>
+          <div class="stat"><strong id="streak">1</strong><span>학습일</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <div>
+        <h2>오늘의 단어</h2>
+        <p>명사 2 · 동사 2 · 형용사 2 · 부사 2</p>
+      </div>
+    </div>
+    <div class="grid" id="wordGrid"></div>
+
+    <div class="extra-section">
+      <div class="section-title">
+        <div>
+          <h2>추가 학습 단어</h2>
+          <p>예문 속 모르는 단어를 눌러 직접 추가할 수 있어.</p>
+        </div>
+        <button class="btn" id="clearExtraWords">추가 단어 비우기</button>
+      </div>
+      <div class="extra-grid" id="extraWordGrid"></div>
+    </div>
+  </section>
+
+  <section id="quiz" class="section">
+    <div class="section-title">
+      <div>
+        <h2>단어 시험</h2>
+        <p>오늘 배운 8개 단어로 바로 테스트해봐.</p>
+      </div>
+    </div>
+    <div class="quiz-box">
+      <div class="prompt" id="quizMeta">문제 1 / 8</div>
+      <div class="progress"><div id="quizProgress"></div></div>
+      <div class="prompt" id="quizPrompt">뜻을 골라보세요</div>
+      <div class="quiz-word" id="quizWord">予定</div>
+      <div class="options" id="quizOptions"></div>
+      <div class="feedback" id="quizFeedback"></div>
+      <div class="controls">
+        <button class="btn primary" id="nextQuiz" style="display:none">다음 문제</button>
+        <button class="btn" id="restartQuiz">처음부터</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="write" class="section">
+    <div class="section-title">
+      <div>
+        <h2>문장 시험</h2>
+        <p>한국어 문장을 보고 일본어로 직접 써봐.</p>
+      </div>
+    </div>
+    <div class="compose">
+      <div>
+        <div class="sentence-card">
+          <div class="prompt">문제</div>
+          <div class="ko" id="sentenceKo"></div>
+          <div class="hint" id="sentenceHint"></div>
+          <textarea id="sentenceInput" placeholder="일본어 문장을 입력하세요."></textarea>
+          <div class="controls">
+            <button class="btn primary" id="checkSentence">문장 점검하기</button>
+            <button class="btn" id="nextSentence">다른 문제</button>
+          </div>
+          <div id="sentenceResult"></div>
+        </div>
+
+        <div class="sentence-card">
+          <div class="prompt">자유 작문</div>
+          <h3>오늘 단어 하나를 써서 문장을 만들어봐.</h3>
+          <input type="text" id="freeSentence" placeholder="예: 週末の予定を決めました。" />
+          <div class="controls">
+            <button class="btn green" id="checkFree">간단 점검</button>
+          </div>
+          <div id="freeResult"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="kicker">How it checks</div>
+        <h2 style="margin-top:8px">이번 버전의 문장 점검 방식</h2>
+        <p style="line-height:1.75;color:var(--muted)">
+          정답 문장과 완전히 같지 않아도 공백·문장부호 차이는 무시해.
+          그리고 핵심 단어가 들어갔는지, 조사나 정중체가 빠졌는지 간단히 확인해줘.
+        </p>
+        <p style="line-height:1.75;color:var(--muted)">
+          추후 AI를 연결하면 “문법적으로 맞는 다른 표현”까지 훨씬 자연스럽게 판단하고,
+          왜 틀렸는지도 자세히 설명하도록 확장할 수 있어.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="notebook" class="section">
+    <div class="section-title">
+      <div>
+        <h2>오답노트</h2>
+        <p>틀린 단어가 자동으로 저장돼.</p>
+      </div>
+      <button class="btn" id="clearNotebook">오답노트 비우기</button>
+    </div>
+    <div class="notebook" id="notebookList"></div>
+  </section>
+
+  <footer>오늘 8개만. 꾸준히 하면 충분해 🌱</footer>
+</div>
+
+<script>
+const WORD_BANK = {
+  noun: [
+    {word:"約束",reading:"やくそく",meaning:"약속",example:"友達と約束があります。",exKo:"친구와 약속이 있습니다."},
+    {word:"予定",reading:"よてい",meaning:"예정, 계획",example:"週末の予定を決めました。",exKo:"주말 계획을 정했습니다."},
+    {word:"習慣",reading:"しゅうかん",meaning:"습관",example:"毎朝歩くのが習慣です。",exKo:"매일 아침 걷는 것이 습관입니다."},
+    {word:"理由",reading:"りゆう",meaning:"이유",example:"遅れた理由を話します。",exKo:"늦은 이유를 말합니다."},
+    {word:"機会",reading:"きかい",meaning:"기회",example:"日本語を話す機会が増えました。",exKo:"일본어를 말할 기회가 늘었습니다."},
+    {word:"準備",reading:"じゅんび",meaning:"준비",example:"旅行の準備をしています。",exKo:"여행 준비를 하고 있습니다."}
+  ],
+  verb: [
+    {word:"忘れる",reading:"わすれる",meaning:"잊다",example:"傘を忘れました。",exKo:"우산을 잊어버렸습니다."},
+    {word:"選ぶ",reading:"えらぶ",meaning:"고르다, 선택하다",example:"好きな色を選びます。",exKo:"좋아하는 색을 고릅니다."},
+    {word:"決める",reading:"きめる",meaning:"정하다, 결정하다",example:"今日中に決めます。",exKo:"오늘 중으로 정하겠습니다."},
+    {word:"続ける",reading:"つづける",meaning:"계속하다",example:"日本語の勉強を続けます。",exKo:"일본어 공부를 계속합니다."},
+    {word:"比べる",reading:"くらべる",meaning:"비교하다",example:"二つの商品を比べます。",exKo:"두 상품을 비교합니다."},
+    {word:"間に合う",reading:"まにあう",meaning:"시간에 맞다, 늦지 않다",example:"電車に間に合いました。",exKo:"전철 시간에 맞췄습니다."}
+  ],
+  adjective: [
+    {word:"優しい",reading:"やさしい",meaning:"친절하다, 상냥하다",example:"先生はとても優しいです。",exKo:"선생님은 매우 친절합니다."},
+    {word:"眠い",reading:"ねむい",meaning:"졸리다",example:"今日は少し眠いです。",exKo:"오늘은 조금 졸립니다."},
+    {word:"細かい",reading:"こまかい",meaning:"세세하다, 자세하다",example:"細かい説明が必要です。",exKo:"자세한 설명이 필요합니다."},
+    {word:"珍しい",reading:"めずらしい",meaning:"드물다, 희귀하다",example:"珍しい料理を食べました。",exKo:"희귀한 요리를 먹었습니다."},
+    {word:"厳しい",reading:"きびしい",meaning:"엄격하다, 혹독하다",example:"この先生は少し厳しいです。",exKo:"이 선생님은 조금 엄격합니다."},
+    {word:"懐かしい",reading:"なつかしい",meaning:"그립다, 추억이 떠오르다",example:"この歌を聞くと懐かしいです。",exKo:"이 노래를 들으면 추억이 떠오릅니다."}
+  ],
+  adverb: [
+    {word:"たぶん",reading:"たぶん",meaning:"아마",example:"たぶん明日は雨です。",exKo:"아마 내일은 비입니다."},
+    {word:"けっこう",reading:"けっこう",meaning:"꽤, 제법",example:"この問題はけっこう難しいです。",exKo:"이 문제는 꽤 어렵습니다."},
+    {word:"そろそろ",reading:"そろそろ",meaning:"슬슬, 이제 곧",example:"そろそろ帰りましょう。",exKo:"슬슬 돌아갑시다."},
+    {word:"やっと",reading:"やっと",meaning:"겨우, 드디어",example:"やっと仕事が終わりました。",exKo:"드디어 일이 끝났습니다."},
+    {word:"かなり",reading:"かなり",meaning:"상당히, 꽤",example:"今日はかなり暑いです。",exKo:"오늘은 상당히 덥습니다."},
+    {word:"なるべく",reading:"なるべく",meaning:"가능한 한",example:"なるべく早く来てください。",exKo:"가능한 한 빨리 와 주세요."}
+  ]
+};
+
+
+const KANJI_GLOSS = {
+  "友達": ["ともだち", "친구"],
+  "約束": ["やくそく", "약속"],
+  "週末": ["しゅうまつ", "주말"],
+  "予定": ["よてい", "예정, 계획"],
+  "決めました": ["きめました", "정했습니다"],
+  "毎朝": ["まいあさ", "매일 아침"],
+  "歩く": ["あるく", "걷다"],
+  "習慣": ["しゅうかん", "습관"],
+  "遅れた": ["おくれた", "늦었다"],
+  "理由": ["りゆう", "이유"],
+  "話します": ["はなします", "말합니다"],
+  "日本語": ["にほんご", "일본어"],
+  "話す": ["はなす", "말하다"],
+  "機会": ["きかい", "기회"],
+  "増えました": ["ふえました", "늘었습니다"],
+  "旅行": ["りょこう", "여행"],
+  "準備": ["じゅんび", "준비"],
+  "傘": ["かさ", "우산"],
+  "忘れました": ["わすれました", "잊어버렸습니다"],
+  "好き": ["すき", "좋아함, 좋아하는"],
+  "色": ["いろ", "색"],
+  "選びます": ["えらびます", "고릅니다"],
+  "今日中": ["きょうじゅう", "오늘 중"],
+  "決めます": ["きめます", "정합니다"],
+  "勉強": ["べんきょう", "공부"],
+  "続けます": ["つづけます", "계속합니다"],
+  "二つ": ["ふたつ", "두 개"],
+  "商品": ["しょうひん", "상품"],
+  "比べます": ["くらべます", "비교합니다"],
+  "電車": ["でんしゃ", "전철"],
+  "間に合いました": ["まにあいました", "시간에 맞췄습니다"],
+  "先生": ["せんせい", "선생님"],
+  "優しい": ["やさしい", "친절하다, 상냥하다"],
+  "今日": ["きょう", "오늘"],
+  "少し": ["すこし", "조금"],
+  "眠い": ["ねむい", "졸리다"],
+  "細かい": ["こまかい", "세세하다, 자세하다"],
+  "説明": ["せつめい", "설명"],
+  "必要": ["ひつよう", "필요"],
+  "珍しい": ["めずらしい", "드물다, 희귀하다"],
+  "料理": ["りょうり", "요리"],
+  "食べました": ["たべました", "먹었습니다"],
+  "厳しい": ["きびしい", "엄격하다, 혹독하다"],
+  "歌": ["うた", "노래"],
+  "聞く": ["きく", "듣다"],
+  "懐かしい": ["なつかしい", "그립다, 추억이 떠오르다"],
+  "明日": ["あした", "내일"],
+  "雨": ["あめ", "비"],
+  "問題": ["もんだい", "문제"],
+  "難しい": ["むずかしい", "어렵다"],
+  "帰りましょう": ["かえりましょう", "돌아갑시다"],
+  "仕事": ["しごと", "일"],
+  "終わりました": ["おわりました", "끝났습니다"],
+  "暑い": ["あつい", "덥다"],
+  "早く": ["はやく", "빨리"],
+  "来て": ["きて", "와서 / 오다"]
+};
+
+function renderExampleWithTips(sentence, exKo=""){
+  let result = "";
+  let i = 0;
+  const keys = Object.keys(KANJI_GLOSS).sort((a,b)=>b.length-a.length);
+  while(i < sentence.length){
+    let matched = null;
+    for(const key of keys){
+      if(sentence.startsWith(key, i)){
+        matched = key;
+        break;
+      }
+    }
+    if(matched){
+      const [reading, meaning] = KANJI_GLOSS[matched];
+      const meta = TOOLTIP_WORD_META[matched] || {word:matched, reading, meaning, cat:"extra"};
+      const already = (state.extraWords || []).some(x=>x.word===meta.word) ||
+                      (state.todayWords || []).some(x=>x.word===meta.word);
+      result += `<span class="kanji-tip" tabindex="0">
+        ${matched}
+        <span class="tip-popover">
+          <div class="tip-reading">${meta.reading}</div>
+          <div class="tip-meaning">${meta.meaning}</div>
+          <button class="tip-add ${already?"added":""}"
+            data-add-word="${encodeURIComponent(meta.word)}"
+            data-add-reading="${encodeURIComponent(meta.reading)}"
+            data-add-meaning="${encodeURIComponent(meta.meaning)}"
+            data-add-cat="${encodeURIComponent(meta.cat)}"
+            data-add-example="${encodeURIComponent(sentence)}"
+            data-add-exko="${encodeURIComponent(exKo)}"
+            ${already?"disabled":""}>
+            ${already?"✓ 학습 중":"+ 오늘의 단어에 추가"}
+          </button>
+        </span>
+      </span>`;
+      i += matched.length;
+    }else{
+      result += sentence[i];
+      i++;
+    }
+  }
+  return result;
+}
+
+const TOOLTIP_WORD_META = {
+  "友達": {word:"友達",reading:"ともだち",meaning:"친구",cat:"noun"},
+  "約束": {word:"約束",reading:"やくそく",meaning:"약속",cat:"noun"},
+  "週末": {word:"週末",reading:"しゅうまつ",meaning:"주말",cat:"noun"},
+  "予定": {word:"予定",reading:"よてい",meaning:"예정, 계획",cat:"noun"},
+  "決めました": {word:"決める",reading:"きめる",meaning:"정하다, 결정하다",cat:"verb"},
+  "毎朝": {word:"毎朝",reading:"まいあさ",meaning:"매일 아침",cat:"noun"},
+  "歩く": {word:"歩く",reading:"あるく",meaning:"걷다",cat:"verb"},
+  "習慣": {word:"習慣",reading:"しゅうかん",meaning:"습관",cat:"noun"},
+  "遅れた": {word:"遅れる",reading:"おくれる",meaning:"늦다",cat:"verb"},
+  "理由": {word:"理由",reading:"りゆう",meaning:"이유",cat:"noun"},
+  "話します": {word:"話す",reading:"はなす",meaning:"말하다",cat:"verb"},
+  "日本語": {word:"日本語",reading:"にほんご",meaning:"일본어",cat:"noun"},
+  "話す": {word:"話す",reading:"はなす",meaning:"말하다",cat:"verb"},
+  "機会": {word:"機会",reading:"きかい",meaning:"기회",cat:"noun"},
+  "増えました": {word:"増える",reading:"ふえる",meaning:"늘다, 증가하다",cat:"verb"},
+  "旅行": {word:"旅行",reading:"りょこう",meaning:"여행",cat:"noun"},
+  "準備": {word:"準備",reading:"じゅんび",meaning:"준비",cat:"noun"},
+  "傘": {word:"傘",reading:"かさ",meaning:"우산",cat:"noun"},
+  "忘れました": {word:"忘れる",reading:"わすれる",meaning:"잊다",cat:"verb"},
+  "好き": {word:"好き",reading:"すき",meaning:"좋아하다, 좋아함",cat:"adjective"},
+  "色": {word:"色",reading:"いろ",meaning:"색",cat:"noun"},
+  "選びます": {word:"選ぶ",reading:"えらぶ",meaning:"고르다, 선택하다",cat:"verb"},
+  "今日中": {word:"今日中",reading:"きょうじゅう",meaning:"오늘 중",cat:"noun"},
+  "決めます": {word:"決める",reading:"きめる",meaning:"정하다, 결정하다",cat:"verb"},
+  "勉強": {word:"勉強",reading:"べんきょう",meaning:"공부",cat:"noun"},
+  "続けます": {word:"続ける",reading:"つづける",meaning:"계속하다",cat:"verb"},
+  "二つ": {word:"二つ",reading:"ふたつ",meaning:"두 개",cat:"noun"},
+  "商品": {word:"商品",reading:"しょうひん",meaning:"상품",cat:"noun"},
+  "比べます": {word:"比べる",reading:"くらべる",meaning:"비교하다",cat:"verb"},
+  "電車": {word:"電車",reading:"でんしゃ",meaning:"전철",cat:"noun"},
+  "間に合いました": {word:"間に合う",reading:"まにあう",meaning:"시간에 맞다, 늦지 않다",cat:"verb"},
+  "先生": {word:"先生",reading:"せんせい",meaning:"선생님",cat:"noun"},
+  "優しい": {word:"優しい",reading:"やさしい",meaning:"친절하다, 상냥하다",cat:"adjective"},
+  "今日": {word:"今日",reading:"きょう",meaning:"오늘",cat:"noun"},
+  "少し": {word:"少し",reading:"すこし",meaning:"조금",cat:"adverb"},
+  "眠い": {word:"眠い",reading:"ねむい",meaning:"졸리다",cat:"adjective"},
+  "細かい": {word:"細かい",reading:"こまかい",meaning:"세세하다, 자세하다",cat:"adjective"},
+  "説明": {word:"説明",reading:"せつめい",meaning:"설명",cat:"noun"},
+  "必要": {word:"必要",reading:"ひつよう",meaning:"필요하다, 필요",cat:"adjective"},
+  "珍しい": {word:"珍しい",reading:"めずらしい",meaning:"드물다, 희귀하다",cat:"adjective"},
+  "料理": {word:"料理",reading:"りょうり",meaning:"요리",cat:"noun"},
+  "食べました": {word:"食べる",reading:"たべる",meaning:"먹다",cat:"verb"},
+  "厳しい": {word:"厳しい",reading:"きびしい",meaning:"엄격하다, 혹독하다",cat:"adjective"},
+  "歌": {word:"歌",reading:"うた",meaning:"노래",cat:"noun"},
+  "聞く": {word:"聞く",reading:"きく",meaning:"듣다",cat:"verb"},
+  "懐かしい": {word:"懐かしい",reading:"なつかしい",meaning:"그립다, 추억이 떠오르다",cat:"adjective"},
+  "明日": {word:"明日",reading:"あした",meaning:"내일",cat:"noun"},
+  "雨": {word:"雨",reading:"あめ",meaning:"비",cat:"noun"},
+  "問題": {word:"問題",reading:"もんだい",meaning:"문제",cat:"noun"},
+  "難しい": {word:"難しい",reading:"むずかしい",meaning:"어렵다",cat:"adjective"},
+  "帰りましょう": {word:"帰る",reading:"かえる",meaning:"돌아가다",cat:"verb"},
+  "仕事": {word:"仕事",reading:"しごと",meaning:"일",cat:"noun"},
+  "終わりました": {word:"終わる",reading:"おわる",meaning:"끝나다",cat:"verb"},
+  "暑い": {word:"暑い",reading:"あつい",meaning:"덥다",cat:"adjective"},
+  "早く": {word:"早く",reading:"はやく",meaning:"빨리",cat:"adverb"},
+  "来て": {word:"来る",reading:"くる",meaning:"오다",cat:"verb"}
+};
+
+const CAT_KO = {noun:"명사",verb:"동사",adjective:"형용사",adverb:"부사",extra:"추가"};
+const KEY = "jpStudyV1";
+let state = JSON.parse(localStorage.getItem(KEY) || "{}");
+if(!state.todayWords) state.todayWords = pickTodayWords();
+if(!state.learned) state.learned = {};
+if(!state.wrong) state.wrong = {};
+if(!state.extraWords) state.extraWords = [];
+if(!state.quizScore) state.quizScore = null;
+if(!state.studyDates) state.studyDates = [];
+if(!state.updatedAt) state.updatedAt = 0;
+
+const todayKey = new Date().toISOString().slice(0,10);
+if(!state.studyDates.includes(todayKey)) state.studyDates.push(todayKey);
+persistLocalOnly();
+
+function persistLocalOnly(){
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+
+function save(){
+  state.updatedAt = Date.now();
+  persistLocalOnly();
+  if(window.cloudSync && typeof window.cloudSync.scheduleSave === "function"){
+    window.cloudSync.scheduleSave();
+  }
+}
+
+function rerenderAll(){
+  renderWords();
+  renderExtraWords();
+  renderStats();
+  renderNotebook();
+  if(document.getElementById("write").classList.contains("active")) loadSentence();
+}
+
+window.jpStudy = {
+  getState: () => JSON.parse(JSON.stringify(state)),
+  replaceState: (nextState) => {
+    state = nextState || {};
+    if(!state.todayWords) state.todayWords = pickTodayWords();
+    if(!state.learned) state.learned = {};
+    if(!state.wrong) state.wrong = {};
+    if(!state.extraWords) state.extraWords = [];
+    if(!state.studyDates) state.studyDates = [];
+    if(!state.updatedAt) state.updatedAt = 0;
+    if(!state.studyDates.includes(todayKey)) state.studyDates.push(todayKey);
+    persistLocalOnly();
+    rerenderAll();
+  },
+  rerender: rerenderAll,
+  persistLocalOnly
+};
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function pickTodayWords(){
+  const result=[];
+  ["noun","verb","adjective","adverb"].forEach(cat=>{
+    shuffle(WORD_BANK[cat]).slice(0,2).forEach(x=>result.push({...x,cat}));
+  });
+  return result;
+}
+function normalize(s){
+  return (s||"").toLowerCase().replace(/[。、！？!?.,\s]/g,"").replace(/です$/,"です");
+}
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+
+const tabs=[...document.querySelectorAll("nav button")];
+tabs.forEach(btn=>btn.addEventListener("click",()=>{
+  tabs.forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(btn.dataset.tab).classList.add("active");
+  if(btn.dataset.tab==="quiz") startQuiz();
+  if(btn.dataset.tab==="write") loadSentence();
+  if(btn.dataset.tab==="notebook") renderNotebook();
+}));
+
+
+document.addEventListener("click", (e)=>{
+  const addBtn = e.target.closest(".tip-add");
+  if(addBtn && !addBtn.disabled){
+    e.preventDefault();
+    e.stopPropagation();
+    const w = {
+      word: decodeURIComponent(addBtn.dataset.addWord),
+      reading: decodeURIComponent(addBtn.dataset.addReading),
+      meaning: decodeURIComponent(addBtn.dataset.addMeaning),
+      cat: decodeURIComponent(addBtn.dataset.addCat),
+      example: decodeURIComponent(addBtn.dataset.addExample),
+      exKo: decodeURIComponent(addBtn.dataset.addExko)
+    };
+    const already = state.extraWords.some(x=>x.word===w.word) ||
+                    state.todayWords.some(x=>x.word===w.word);
+    if(!already){
+      state.extraWords.push(w);
+      save();
+      renderExtraWords();
+      renderWords();
+      renderStats();
+    }
+    return;
+  }
+
+  const tip = e.target.closest(".kanji-tip");
+  document.querySelectorAll(".kanji-tip.show-tip").forEach(el=>{
+    if(el !== tip) el.classList.remove("show-tip");
+  });
+  if(tip) tip.classList.toggle("show-tip");
+});
+
+document.getElementById("todayLabel").textContent =
+  new Intl.DateTimeFormat("ko-KR",{year:"numeric",month:"long",day:"numeric"}).format(new Date());
+
+function renderWords(){
+  const grid=document.getElementById("wordGrid");
+  grid.innerHTML="";
+  state.todayWords.forEach((w,idx)=>{
+    const learned=!!state.learned[w.word];
+    const card=document.createElement("div");
+    card.className="word-card";
+    card.innerHTML=`
+      <div class="tag">${CAT_KO[w.cat]}</div>
+      <div class="jp">${w.word}</div>
+      <div class="reading">${w.reading}</div>
+      <div class="meaning">${w.meaning}</div>
+      <div class="example">${renderExampleWithTips(w.example, w.exKo)}<small>${w.exKo}</small></div>
+      <div class="card-actions">
+        <button class="mini ${learned?"learned":""}" data-learn="${idx}">${learned?"✓ 외웠어요":"외웠어요"}</button>
+        <button class="mini" data-swap="${idx}">이건 알아요</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll("[data-learn]").forEach(b=>b.onclick=()=>{
+    const w=state.todayWords[+b.dataset.learn];
+    if(state.learned[w.word]) delete state.learned[w.word]; else state.learned[w.word]=true;
+    save();renderWords();renderStats();
+  });
+
+  document.querySelectorAll("[data-swap]").forEach(b=>b.onclick=()=>{
+    const idx=+b.dataset.swap;
+    const old=state.todayWords[idx];
+    const used=new Set(state.todayWords.map(x=>x.word));
+    const candidates=WORD_BANK[old.cat].filter(x=>!used.has(x.word));
+    if(candidates.length){
+      const next=shuffle(candidates)[0];
+      state.todayWords[idx]={...next,cat:old.cat};
+      save();renderWords();
+    }
+  });
+}
+function getAllStudyWords(){
+  const seen = new Set();
+  return [...state.todayWords, ...state.extraWords].filter(w=>{
+    if(seen.has(w.word)) return false;
+    seen.add(w.word);
+    return true;
+  });
+}
+
+function renderExtraWords(){
+  const grid=document.getElementById("extraWordGrid");
+  if(!grid) return;
+  if(!state.extraWords.length){
+    grid.innerHTML=`<div class="extra-empty">예문의 점선 단어를 눌러 <b>+ 오늘의 단어에 추가</b>를 눌러봐.</div>`;
+    return;
+  }
+  grid.innerHTML="";
+  state.extraWords.forEach((w,idx)=>{
+    const learned=!!state.learned[w.word];
+    const card=document.createElement("div");
+    card.className="word-card";
+    card.innerHTML=`
+      <div class="tag">${CAT_KO[w.cat]||"추가"}</div>
+      <div class="jp">${w.word}</div>
+      <div class="reading">${w.reading}</div>
+      <div class="meaning">${w.meaning}</div>
+      <div class="example">${renderExampleWithTips(w.example, w.exKo)}<small>${w.exKo||""}</small></div>
+      <div class="card-actions">
+        <button class="mini ${learned?"learned":""}" data-extra-learn="${idx}">${learned?"✓ 외웠어요":"외웠어요"}</button>
+        <button class="mini" data-extra-remove="${idx}">삭제</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll("[data-extra-learn]").forEach(b=>b.onclick=()=>{
+    const w=state.extraWords[+b.dataset.extraLearn];
+    if(state.learned[w.word]) delete state.learned[w.word]; else state.learned[w.word]=true;
+    save();renderExtraWords();renderStats();
+  });
+
+  document.querySelectorAll("[data-extra-remove]").forEach(b=>b.onclick=()=>{
+    const w=state.extraWords[+b.dataset.extraRemove];
+    state.extraWords.splice(+b.dataset.extraRemove,1);
+    delete state.learned[w.word];
+    save();renderExtraWords();renderWords();renderStats();
+  });
+}
+
+function renderStats(){
+  document.getElementById("learnedCount").textContent = getAllStudyWords().filter(w=>state.learned[w.word]).length;
+  document.getElementById("wrongCount").textContent = Object.keys(state.wrong).length;
+  document.getElementById("quizScore").textContent = state.quizScore===null ? "-" : state.quizScore;
+  document.getElementById("streak").textContent = new Set(state.studyDates).size;
+}
+document.getElementById("refreshWords").onclick=()=>{
+  state.todayWords=pickTodayWords(); save(); renderWords(); renderExtraWords(); startQuiz(); loadSentence();
+};
+document.getElementById("clearExtraWords").onclick=()=>{
+  state.extraWords.forEach(w=>delete state.learned[w.word]);
+  state.extraWords=[];
+  save();
+  renderExtraWords();
+  renderWords();
+  renderStats();
+};
+
+document.getElementById("resetToday").onclick=()=>{
+  state.todayWords.forEach(w=>delete state.learned[w.word]); save();renderWords();renderStats();
+};
+
+let quiz=[], qi=0, score=0, locked=false;
+function startQuiz(){
+  quiz=shuffle(getAllStudyWords());
+  qi=0;score=0;locked=false;
+  showQuiz();
+}
+function showQuiz(){
+  const w=quiz[qi];
+  if(!w){return}
+  locked=false;
+  document.getElementById("quizMeta").textContent=`문제 ${qi+1} / ${quiz.length}`;
+  document.getElementById("quizProgress").style.width=`${(qi/quiz.length)*100}%`;
+  const reverse=Math.random()>.5;
+  document.getElementById("quizPrompt").textContent=reverse?"일본어 단어를 골라보세요":"뜻을 골라보세요";
+  document.getElementById("quizWord").textContent=reverse?w.meaning:w.word;
+  const pool=getAllStudyWords().filter(x=>x.word!==w.word);
+  const wrongs=shuffle(pool).slice(0,3);
+  const opts=shuffle([w,...wrongs]);
+  const box=document.getElementById("quizOptions");
+  box.innerHTML="";
+  opts.forEach(o=>{
+    const btn=document.createElement("button");
+    btn.className="option";
+    btn.textContent=reverse?o.word:o.meaning;
+    btn.onclick=()=>answerQuiz(btn,o.word===w.word,w);
+    box.appendChild(btn);
+  });
+  document.getElementById("quizFeedback").textContent="";
+  document.getElementById("nextQuiz").style.display="none";
+}
+function answerQuiz(btn,isCorrect,w){
+  if(locked)return;
+  locked=true;
+  [...document.querySelectorAll(".option")].forEach(x=>x.disabled=true);
+  if(isCorrect){
+    score++;btn.classList.add("correct");
+    document.getElementById("quizFeedback").textContent=`정답! ${w.word}（${w.reading}） = ${w.meaning}`;
+  }else{
+    btn.classList.add("wrong");
+    state.wrong[w.word]={...w,at:new Date().toISOString()};
+    [...document.querySelectorAll(".option")].forEach(x=>{
+      if(x.textContent===w.meaning || x.textContent===w.word) x.classList.add("correct");
+    });
+    document.getElementById("quizFeedback").textContent=`아쉬워! 정답은 ${w.word}（${w.reading}） = ${w.meaning}`;
+  }
+  save();renderStats();
+  const next=document.getElementById("nextQuiz");
+  next.style.display="inline-block";
+  next.textContent=qi===quiz.length-1 ? "결과 보기" : "다음 문제";
+}
+document.getElementById("nextQuiz").onclick=()=>{
+  if(qi<quiz.length-1){qi++;showQuiz();}
+  else{
+    state.quizScore=`${score}/${quiz.length}`;save();renderStats();
+    document.getElementById("quizProgress").style.width="100%";
+    document.getElementById("quizWord").textContent=`${score} / ${quiz.length}`;
+    document.getElementById("quizPrompt").textContent="시험 완료";
+    document.getElementById("quizOptions").innerHTML="";
+    document.getElementById("quizFeedback").textContent =
+      score===8 ? "완벽해! 오늘 단어는 거의 다 잡았어 🌸" :
+      score>=6 ? "좋아! 틀린 단어만 오답노트에서 한 번 더 보자." :
+      "괜찮아. 틀린 단어를 보고 다시 한 번 도전해보자.";
+    document.getElementById("nextQuiz").style.display="none";
+  }
+};
+document.getElementById("restartQuiz").onclick=startQuiz;
+
+let sentenceIndex=0;
+function sentencePool(){
+  return getAllStudyWords().map(w=>({
+    ...w, answer:w.example, ko:w.exKo,
+    keywords:[w.word, w.reading]
+  }));
+}
+function loadSentence(){
+  const pool=sentencePool();
+  sentenceIndex=Math.floor(Math.random()*pool.length);
+  const s=pool[sentenceIndex];
+  document.getElementById("sentenceKo").textContent=s.ko;
+  document.getElementById("sentenceHint").textContent=`힌트: ${s.word}（${s.reading}）를 사용해보세요.`;
+  document.getElementById("sentenceInput").value="";
+  document.getElementById("sentenceResult").innerHTML="";
+}
+document.getElementById("nextSentence").onclick=loadSentence;
+
+document.getElementById("checkSentence").onclick=()=>{
+  const s=sentencePool()[sentenceIndex];
+  const input=document.getElementById("sentenceInput").value.trim();
+  const result=document.getElementById("sentenceResult");
+  if(!input){
+    result.innerHTML=`<div class="result-box bad">문장을 먼저 입력해줘.</div>`;
+    return;
+  }
+  const nIn=normalize(input), nAns=normalize(s.answer);
+  const containsWord = input.includes(s.word) || input.includes(s.reading);
+  if(nIn===nAns){
+    result.innerHTML=`<div class="result-box good"><b>정답!</b><br>${escapeHtml(s.answer)}<br><span style="opacity:.8">${escapeHtml(s.ko)}</span></div>`;
+    return;
+  }
+  if(containsWord){
+    let notes=[];
+    if(!/[。！？!?]$/.test(input)) notes.push("문장부호는 없어도 괜찮아.");
+    if(s.answer.endsWith("です。") && !input.includes("です")) notes.push("이번 문제는 정중체라서 <b>です</b>를 붙이면 더 좋아.");
+    if(s.answer.endsWith("ます。") && !input.includes("ます") && !input.includes("ました")) notes.push("이번 문제는 정중체라서 <b>ます/ました</b> 형태를 확인해봐.");
+    result.innerHTML=`<div class="result-box good"><b>핵심 단어는 잘 사용했어.</b><br>
+      네 문장: ${escapeHtml(input)}<br>
+      기준 예문: ${escapeHtml(s.answer)}<br>
+      ${notes.length?notes.join("<br>"):"표현이 기준 예문과 다르지만, 현재 버전에서는 의미·문법을 완전히 판별할 수는 없어."}
+    </div>`;
+  }else{
+    state.wrong[s.word]={...s,at:new Date().toISOString()};save();renderStats();
+    result.innerHTML=`<div class="result-box bad"><b>${s.word}（${s.reading}）</b>를 넣어서 다시 써보자.<br>
+      기준 예문: ${escapeHtml(s.answer)}</div>`;
+  }
+};
+
+document.getElementById("checkFree").onclick=()=>{
+  const input=document.getElementById("freeSentence").value.trim();
+  const result=document.getElementById("freeResult");
+  if(!input){
+    result.innerHTML=`<div class="result-box bad">문장을 입력해줘.</div>`; return;
+  }
+  const used=getAllStudyWords().filter(w=>input.includes(w.word)||input.includes(w.reading));
+  if(used.length){
+    const particles=["は","が","を","に","で","と","の"];
+    const hasParticle=particles.some(p=>input.includes(p));
+    result.innerHTML=`<div class="result-box good"><b>좋아!</b> 오늘 단어 ${used.map(x=>`<b>${x.word}</b>`).join(", ")}를 사용했어.<br>
+      ${hasParticle?"조사도 포함되어 있어 문장 형태가 잘 잡혀 있어.":"조사가 필요한 문장인지 한 번 확인해봐."}<br>
+      <span style="opacity:.8">※ 현재는 간단 규칙 점검이야. AI를 연결하면 자연스러움과 문법까지 자세히 봐줄 수 있어.</span>
+    </div>`;
+  }else{
+    result.innerHTML=`<div class="result-box bad">오늘 배운 단어 중 하나를 넣어보자.<br>
+      ${getAllStudyWords().map(w=>w.word).join(" · ")}</div>`;
+  }
+};
+
+function renderNotebook(){
+  const list=document.getElementById("notebookList");
+  const items=Object.values(state.wrong);
+  if(!items.length){list.innerHTML=`<div class="empty">아직 오답이 없어. 아주 좋아!</div>`;return;}
+  list.innerHTML=items.map(w=>`
+    <div class="note-item">
+      <div class="tag">${CAT_KO[w.cat]||""}</div>
+      <strong>${w.word}</strong> <span style="color:var(--muted)">(${w.reading})</span>
+      <div style="margin-top:6px;font-weight:700">${w.meaning}</div>
+      <div class="example">${renderExampleWithTips(w.example, w.exKo)}<small>${w.exKo}</small></div>
+    </div>`).join("");
+}
+document.getElementById("clearNotebook").onclick=()=>{
+  state.wrong={};save();renderNotebook();renderStats();
+};
+
+renderWords();
+renderExtraWords();
+renderStats();
+loadSentence();
+</script>
+
+<script type="module" src="./sync.js"></script>
+</body>
+</html>

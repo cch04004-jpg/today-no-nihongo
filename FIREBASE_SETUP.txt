@@ -1,0 +1,52 @@
+今日の日本語 V4 — PC/모바일 자동 동기화 설정
+
+준비된 기능
+- 로그인 전: 기존처럼 현재 브라우저 localStorage에 저장
+- Google 로그인 후: Cloud Firestore에 학습기록 자동 저장
+- 다른 PC/휴대폰에서 같은 Google 계정으로 로그인하면 기록 불러오기
+- 외운 단어, 오답노트, 추가 학습 단어, 학습일 기록을 병합
+- 각 사용자는 자신의 UID 경로만 읽고 쓰도록 Firestore Rules 제공
+
+1. Firebase 프로젝트 만들기
+https://console.firebase.google.com/
+'프로젝트 추가'를 눌러 새 프로젝트를 만듭니다.
+Google Analytics는 이 사이트에는 필수가 아닙니다.
+
+2. Web 앱 등록
+Firebase 프로젝트 개요에서 </> (Web) 아이콘을 누릅니다.
+앱 별명 예: today-no-nihongo
+웹 앱을 등록하면 firebaseConfig 객체가 표시됩니다.
+
+3. firebase-config.js 수정
+이 폴더의 firebase-config.js를 열고
+Firebase가 보여준 firebaseConfig 값으로 YOUR_... 부분을 교체합니다.
+
+4. Google 로그인 켜기
+Firebase Console > Authentication > Sign-in method
+Google 제공업체를 Enable 합니다.
+
+5. 현재 Vercel 주소 허용
+Firebase Console > Authentication > Settings > Authorized domains
+아래 도메인을 추가합니다.
+today-no-nihongo.vercel.app
+
+배포하면서 주소가 바뀌면 새 vercel.app 도메인도 추가해야 합니다.
+
+6. Cloud Firestore 만들기
+Firebase Console > Firestore Database > Create database
+데이터베이스를 생성합니다.
+
+7. 보안 규칙 설정
+Firestore Database > Rules에서 이 폴더의 firestore.rules 내용을 그대로 붙여넣고 Publish 합니다.
+이 규칙은 로그인한 사용자가 자기 UID 아래의 학습 데이터만 읽고 쓸 수 있게 합니다.
+
+8. Vercel에 배포
+index.html
+sync.js
+firebase-config.js
+세 파일이 같은 최상위 폴더에 있어야 합니다.
+ZIP 전체를 배포하면 됩니다.
+
+주의
+- firebaseConfig는 Firebase 웹 앱이 브라우저에서 사용하는 공개 설정값입니다.
+- 대신 Firestore를 '모두 허용' 규칙으로 두면 안 됩니다. 반드시 제공한 Security Rules를 적용하세요.
