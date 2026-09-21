@@ -18,3 +18,4 @@
 
 ## 다음 단계
 자유작문을 AI로 실제 문법/자연스러움까지 교정하려면 API 연결이 필요합니다.
+Firebase sync enabled.
