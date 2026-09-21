@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyCz8aYbK55RaDX6XsdAnHTsAXf4voa_ezs",
+  apiKey: "AIzaSyCz8aYbKS5RaDX6XsdAnHTsAXf4voa_ezs",
   authDomain: "today-no-nihongo.firebaseapp.com",
   projectId: "today-no-nihongo",
   storageBucket: "today-no-nihongo.firebasestorage.app",
