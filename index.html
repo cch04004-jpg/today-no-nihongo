@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>今日の日本語 | 일본어 공부</title>
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Yomogi&display=swap");
     :root{
+      --jp-font:"Yomogi", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
       --bg:#fffaf7;
       --card:#ffffff;
       --ink:#2f2a2a;
@@ -157,6 +159,44 @@
     .empty{color:var(--muted);text-align:center;padding:40px}
     .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     footer{margin-top:36px;text-align:center;color:var(--muted);font-size:13px}
+
+
+    /* Japanese handwriting font */
+    .jp,
+    .reading,
+    .quiz-word,
+    #sentenceInput,
+    #freeSentence,
+    .tip-reading,
+    .japanese-text,
+    [lang="ja"]{
+      font-family:var(--jp-font);
+    }
+
+    .example{
+      font-family:var(--jp-font);
+      font-size:16px;
+      letter-spacing:.01em;
+    }
+
+    .example small{
+      font-family:Inter, Pretendard, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .kanji-tip,
+    .tip-reading{
+      font-family:var(--jp-font);
+    }
+
+    #sentenceInput,
+    #freeSentence{
+      font-size:18px;
+      line-height:1.8;
+    }
+
+    .quiz-word{
+      line-height:1.35;
+    }
 
     .kanji-tip{
       position:relative;
@@ -377,7 +417,7 @@
       <div class="prompt" id="quizMeta">문제 1 / 8</div>
       <div class="progress"><div id="quizProgress"></div></div>
       <div class="prompt" id="quizPrompt">뜻을 골라보세요</div>
-      <div class="quiz-word" id="quizWord">予定</div>
+      <div class="quiz-word" id="quizWord" lang="ja">予定</div>
       <div class="options" id="quizOptions"></div>
       <div class="feedback" id="quizFeedback"></div>
       <div class="controls">
@@ -400,7 +440,7 @@
           <div class="prompt">문제</div>
           <div class="ko" id="sentenceKo"></div>
           <div class="hint" id="sentenceHint"></div>
-          <textarea id="sentenceInput" placeholder="일본어 문장을 입력하세요."></textarea>
+          <textarea id="sentenceInput" lang="ja" placeholder="일본어 문장을 입력하세요."></textarea>
           <div class="controls">
             <button class="btn primary" id="checkSentence">문장 점검하기</button>
             <button class="btn" id="nextSentence">다른 문제</button>
@@ -411,7 +451,7 @@
         <div class="sentence-card">
           <div class="prompt">자유 작문</div>
           <h3>오늘 단어 하나를 써서 문장을 만들어봐.</h3>
-          <input type="text" id="freeSentence" placeholder="예: 週末の予定を決めました。" />
+          <input type="text" id="freeSentence" lang="ja" placeholder="예: 週末の予定を決めました。" />
           <div class="controls">
             <button class="btn green" id="checkFree">간단 점검</button>
           </div>
@@ -564,7 +604,7 @@ function renderExampleWithTips(sentence, exKo=""){
       result += `<span class="kanji-tip" tabindex="0">
         ${matched}
         <span class="tip-popover">
-          <div class="tip-reading">${meta.reading}</div>
+          <div class="tip-reading" lang="ja">${meta.reading}</div>
           <div class="tip-meaning">${meta.meaning}</div>
           <button class="tip-add ${already?"added":""}"
             data-add-word="${encodeURIComponent(meta.word)}"
@@ -777,10 +817,10 @@ function renderWords(){
     card.className="word-card";
     card.innerHTML=`
       <div class="tag">${CAT_KO[w.cat]}</div>
-      <div class="jp">${w.word}</div>
-      <div class="reading">${w.reading}</div>
+      <div class="jp" lang="ja">${w.word}</div>
+      <div class="reading" lang="ja">${w.reading}</div>
       <div class="meaning">${w.meaning}</div>
-      <div class="example">${renderExampleWithTips(w.example, w.exKo)}<small>${w.exKo}</small></div>
+      <div class="example" lang="ja">${renderExampleWithTips(w.example, w.exKo)}<small lang="ko">${w.exKo}</small></div>
       <div class="card-actions">
         <button class="mini ${learned?"learned":""}" data-learn="${idx}">${learned?"✓ 외웠어요":"외웠어요"}</button>
         <button class="mini" data-swap="${idx}">이건 알아요</button>
@@ -829,10 +869,10 @@ function renderExtraWords(){
     card.className="word-card";
     card.innerHTML=`
       <div class="tag">${CAT_KO[w.cat]||"추가"}</div>
-      <div class="jp">${w.word}</div>
-      <div class="reading">${w.reading}</div>
+      <div class="jp" lang="ja">${w.word}</div>
+      <div class="reading" lang="ja">${w.reading}</div>
       <div class="meaning">${w.meaning}</div>
-      <div class="example">${renderExampleWithTips(w.example, w.exKo)}<small>${w.exKo||""}</small></div>
+      <div class="example" lang="ja">${renderExampleWithTips(w.example, w.exKo)}<small lang="ko">${w.exKo||""}</small></div>
       <div class="card-actions">
         <button class="mini ${learned?"learned":""}" data-extra-learn="${idx}">${learned?"✓ 외웠어요":"외웠어요"}</button>
         <button class="mini" data-extra-remove="${idx}">삭제</button>
@@ -1021,7 +1061,7 @@ function renderNotebook(){
       <div class="tag">${CAT_KO[w.cat]||""}</div>
       <strong>${w.word}</strong> <span style="color:var(--muted)">(${w.reading})</span>
       <div style="margin-top:6px;font-weight:700">${w.meaning}</div>
-      <div class="example">${renderExampleWithTips(w.example, w.exKo)}<small>${w.exKo}</small></div>
+      <div class="example" lang="ja">${renderExampleWithTips(w.example, w.exKo)}<small lang="ko">${w.exKo}</small></div>
     </div>`).join("");
 }
 document.getElementById("clearNotebook").onclick=()=>{
